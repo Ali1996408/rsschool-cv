@@ -1,3 +1,5 @@
+
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +57,7 @@
     <h1>Ali Kermani</h1>
     <img src="photo_2022-12-03_13-24-59.jpg" alt="Your Photo" style="width: 200px; height: auto;">
     <nav>
-      <!-- Add your navigation links here -->
+      <!-- https://ali1996408.github.io/-rsschool-cv/ -->
     </nav>
   </header>
   
@@ -91,8 +93,49 @@
       <pre><code>
 #include "lpc17xx_gpio.h"
 const uint8_t segmentTable[]={0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F};
-  
-  // Add your code example here
+void Delay() {
+  for(uint16_t count=0; count<UINT16_MAX; count++)
+    for(uint8_t count2=0;count2<150; count2++) { }
+}
+
+void Delaylow() {
+  for(uint16_t count=0; count<UINT16_MAX; count++)
+    for(uint8_t count2=0;count2<20; count2++) { }
+}
+
+int main() {
+  uint8_t pushCount =0;
+  FIO_ByteSetDir(1,2,0xFF,1);
+  GPIO_SetDir(0,(1<<1)|(1<<2)|(1<<3),1);
+  GPIO_SetDir(0,(1<<16),0);
+  GPIO_ClearValue(0,(1<<3));
+  GPIO_SetValue(0,(1<<2));
+  GPIO_SetValue(0,(1<<1));
+  GPIO_SetValue(0,(1<<4));
+
+  while(1) {
+    uint32_t temp=GPIO_ReadValue(0);
+    if(((temp>>16)&0x01)==0) {
+      //key pressed
+
+ChatGPT | Марти 🦓, [7/10/2023 1:19 AM]
+      uint8_t countOfTrue=0;
+      for(uint8_t count=0;count<10;count++) {
+        if(((GPIO_ReadValue(0)>>16)&0x01)==0)
+          countOfTrue++;
+        Delaylow();
+      }
+      if(countOfTrue==10) {
+        pushCount++;
+        if(pushCount==10)
+          pushCount=0;
+        FIO_ByteSetValue(1,2,segmentTable[pushCount]);
+        FIO_ByteClearValue(1,2,~segmentTable[pushCount]);
+        while(((GPIO_ReadValue(0)>>16)&0x01)==0);
+      }
+    }
+  }
+}
   
       </code></pre>
     </section>
@@ -106,11 +149,22 @@ const uint8_t segmentTable[]={0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F}
     </section>
     
     <section>
-      <h2>Education and Language Proficiency</h2>
+      <h2>Education</h2>
       <p>University of Isfahan, 2014-2019</p>
       <p>Bauman Moscow State University, 2022-Present</p>
     </section>
+    
+    <section>
+      <h2>Language Proficiency</h2>
+      <p>English-C1</p>
+      <p>Russian-C1</p>
+      <p>Persian-Native</p>
+      <p>German-A2</p>
+      <p>Arabic-A2</p>
+      <p>Belarussian-A2</p>
+    </section>
   </main>
-  
 </body>
 </html>
+
+
